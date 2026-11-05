@@ -1,0 +1,47 @@
+#include <graphics.h>
+#include <conio.h>
+#include <dos.h>
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+
+
+    int x = 200, y = 200;   
+    int r = 20;             
+    int dx = 4, dy = 3;     
+
+    int maxX = getmaxx();
+    int maxY = getmaxy();
+
+    while (!kbhit()) {
+        cleardevice();
+
+       
+        setcolor(BLUE);
+        circle(x, y, r);
+        setfillstyle(SOLID_FILL, RED);
+        floodfill(x, y, BLUE);
+
+      
+        x += dx;
+        y += dy;
+
+
+        if (x + r >= maxX || x - r <= 0) {
+            dx = -dx;  
+        }
+
+      
+        if (y + r >= maxY || y - r <= 0) {
+            dy = -dy;  
+        }
+
+        delay(20);
+    }
+
+    getch();
+    closegraph();
+    return 0;
+}

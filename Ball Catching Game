@@ -1,0 +1,102 @@
+#include <graphics.h>
+#include <conio.h>
+#include <dos.h>
+#include <stdio.h>
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, (char*)"");
+
+    int maxX = getmaxx();
+    int maxY = getmaxy();
+
+    
+    int x = maxX / 2, y = maxY / 2;
+    int r = 10;
+    int dx = 4, dy = 4;
+
+  
+    int paddleWidth = 100;
+    int paddleHeight = 10;
+    int paddleX = maxX / 2 - paddleWidth / 2;
+    int paddleY = maxY - 30;
+
+    int score = 0;
+    char text[50];
+
+    while (1) {
+        cleardevice();
+
+        
+        setcolor(WHITE);
+        rectangle(paddleX, paddleY,
+                  paddleX + paddleWidth,
+                  paddleY + paddleHeight);
+
+       
+        circle(x, y, r);
+        floodfill(x, y, WHITE);
+
+      
+        sprintf(text, "Score: %d", score);
+        outtextxy(10, 10, text);
+
+       
+        if (kbhit()) {
+            char ch = getch();
+
+            if (ch == 75) { 
+                paddleX -= 20;
+            }
+            if (ch == 77) { 
+                paddleX += 20;
+            }
+            if (ch == 27) break; 
+        }
+
+       
+        if (paddleX < 0) paddleX = 0;
+        if (paddleX + paddleWidth > maxX)
+            paddleX = maxX - paddleWidth;
+
+      
+        x += dx;
+        y += dy;
+
+       
+        if (x - r <= 0 || x + r >= maxX)
+            dx = -dx;
+
+        if (y - r <= 0)
+            dy = -dy;
+
+       
+        if (y + r >= paddleY &&
+            x >= paddleX &&
+            x <= paddleX + paddleWidth) {
+            
+            dy = -dy;
+            score+=10; 
+        }
+
+       
+        if (y + r > maxY) {
+            cleardevice();
+            outtextxy(maxX/2 - 50, maxY/2, "GAME OVER");
+            
+            sprintf(text, "Final Score: %d", score);
+            outtextxy(maxX/2 - 60, maxY/2 + 20, text);
+
+            getch();
+            break;
+        }
+
+        delay(40);
+    }
+
+    closegraph();
+    return 0;
+}
+
+
+// https://graphicsh.online/compiler
